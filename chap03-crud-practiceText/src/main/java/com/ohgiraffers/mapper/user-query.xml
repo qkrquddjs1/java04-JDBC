@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment/>
+    <entry key="selectUse_name">
+        SELECT
+        e.*
+        FROM
+        user_check e
+        WHERE
+        e.user_name LIKE CONCAT(?, '%')
+    </entry>
+    <entry key="insertName">
+        INSERT INTO
+        user_check(user_name, gender, age)
+        VALUES
+        (?, ?, ? )
+    </entry>
+    <entry key="updateName">
+        UPDATE
+            user_check
+        SET
+            user_name = ?,
+            gender = ?,
+            age = ?
+        WHERE
+            user_no = ?
+    </entry>
+    <entry key="deleteName">
+        DELETE FROM
+            user_check
+        WHERE
+            user_no = ?
+    </entry>
+</properties>

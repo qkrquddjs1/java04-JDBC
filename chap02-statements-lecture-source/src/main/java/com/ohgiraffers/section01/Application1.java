@@ -1,4 +1,4 @@
-package com.ohgiraffers.seatement;
+package com.ohgiraffers.section01;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

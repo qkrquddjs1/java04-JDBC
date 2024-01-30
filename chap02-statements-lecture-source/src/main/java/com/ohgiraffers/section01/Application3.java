@@ -1,4 +1,4 @@
-package com.ohgiraffers.seatement;
+package com.ohgiraffers.section01;
 
 import com.ohgiraffers.model.dto.EmployeeDTD;
 

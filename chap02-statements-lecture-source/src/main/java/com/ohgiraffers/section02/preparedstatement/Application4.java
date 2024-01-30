@@ -1,14 +1,15 @@
-package com.ohgiraffers.seatement;
+package com.ohgiraffers.section02.preparedstatement;
 
 import com.ohgiraffers.model.dto.EmployeeDTD;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.ohgiraffers.common.JDBCTempLate.close;
 import static com.ohgiraffers.common.JDBCTempLate.getConnection;
@@ -16,29 +17,39 @@ import static com.ohgiraffers.common.JDBCTempLate.getConnection;
 public class Application4 {
     public static void main(String[] args) {
 
+        /* XML 파일에 별도로 입력 한 sql문을 통해 처리  */
+
 
 
         /* 1. Connection 생성 */
         Connection con = getConnection();
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rset = null;
         /* 한 행의 정보를 담을 DTO */
         EmployeeDTD selectedEmp = null;
         /* 여러 DTO 타입의 객체를 담을 List */
         List<EmployeeDTD> empList = null;
 
+        Scanner sc = new Scanner(System.in);
+        System.out.print("조회할 이름의 성을 입력하세요 : ");
+        String empName = sc.nextLine();
+
+        Properties prop = new Properties();
+
         try {
-            /* 2. Connection 의 creatsStatment() 를 이용한 Statement 인스턴스 생성 */
-            stmt = con.createStatement();
+            prop.loadFromXML(new FileInputStream("src/main/java/com/ohgiraffers/section02/preparedstatement/employee-query.xml"));
+            String query = prop.getProperty("selectEmpByFamilyName");
 
-            String query = "SELECT * FROM employee";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, empName);
 
-            /* 3. STatement의 executeQuery(sql)로 쿼리문 실행하고 결과를 ResultSet으로 반환 받음 */
-            rset = stmt.executeQuery(query);
+
+            /*. PreparedStatement의 executeQuery()로 쿼리문 실행하고 결과를 ResultSet으로 반환 받음 */
+            rset = pstmt.executeQuery();
 
             empList = new ArrayList<>();
 
-            /* 4. ResultSet에 담긴 값을 List 타입의 객체에 설정 */
+            /*  ResultSet에 담긴 값을 List 타입의 객체에 설정 */
             while(rset.next()){
                selectedEmp = new EmployeeDTD();
 
@@ -62,10 +73,16 @@ public class Application4 {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (InvalidPropertiesFormatException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
-            /*5 . 사용한 자원반납 */
+            /* 사용한 자원반납 */
             close(rset);
-            close(stmt);
+            close(pstmt);
             close(con);
         }
 

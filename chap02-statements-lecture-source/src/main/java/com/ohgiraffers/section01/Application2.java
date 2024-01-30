@@ -1,6 +1,5 @@
-package com.ohgiraffers.seatement;
+package com.ohgiraffers.section01;
 
-import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
